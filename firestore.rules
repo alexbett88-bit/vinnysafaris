@@ -28,7 +28,8 @@ service cloud.firestore {
 
     function isAdmin() {
       return isAuthenticated() && 
-        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
          (request.auth.token.email == "alexbett88@gmail.com" && request.auth.token.email_verified == true));
     }
 
@@ -42,11 +43,17 @@ service cloud.firestore {
     // Rules
     match /users/{userId} {
       allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
-      allow create: if isAuthenticated() && isOwner(userId) && isValidUser(request.resource.data) && request.resource.data.role == 'customer';
+      allow create: if isAuthenticated() && isOwner(userId) && isValidUser(request.resource.data) && 
+        (request.resource.data.role == 'customer' || (request.resource.data.role == 'admin' && request.auth.token.email == "alexbett88@gmail.com"));
       allow update: if isAuthenticated() && (isOwner(userId) && request.resource.data.role == resource.data.role || isAdmin());
     }
 
     match /vans/{vanId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /gallery/{itemId} {
       allow read: if true;
       allow write: if isAdmin();
     }

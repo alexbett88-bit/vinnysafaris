@@ -26,7 +26,8 @@ export default function Auth() {
           uid: user.uid,
           email: user.email!,
           displayName: user.displayName || 'User',
-          role: 'customer',
+          role: user.email === 'alexbett88@gmail.com' ? 'admin' : 'customer',
+          createdAt: new Date().toISOString(),
         };
         await setDoc(doc(db, 'users', user.uid), newUser);
       }

@@ -101,19 +101,23 @@ export default function AdminDashboard() {
   React.useEffect(() => {
     const unsubTrips = onSnapshot(query(collection(db, 'trips'), orderBy('date', 'asc')), (snap) => {
       setTrips(snap.docs.map(d => ({ id: d.id, ...d.data() } as Trip)));
-    });
+    }, (err) => console.error('Trips snapshot error:', err));
+
     const unsubVans = onSnapshot(query(collection(db, 'vans')), (snap) => {
       setVans(snap.docs.map(d => ({ id: d.id, ...d.data() } as Van)));
-    });
+    }, (err) => console.error('Vans snapshot error:', err));
+
     const unsubGallery = onSnapshot(query(collection(db, 'gallery'), orderBy('createdAt', 'desc')), (snap) => {
       setGallery(snap.docs.map(d => ({ id: d.id, ...d.data() } as GalleryItem)));
-    });
+    }, (err) => console.error('Gallery snapshot error:', err));
+
     const unsubHires = onSnapshot(query(collection(db, 'privateHires'), orderBy('createdAt', 'desc')), (snap) => {
       setHires(snap.docs.map(d => ({ id: d.id, ...d.data() } as PrivateHire)));
-    });
+    }, (err) => console.error('Hires snapshot error:', err));
+
     const unsubMessages = onSnapshot(query(collection(db, 'messages'), orderBy('createdAt', 'desc')), (snap) => {
       setMessages(snap.docs.map(d => ({ id: d.id, ...d.data() } as Message)));
-    });
+    }, (err) => console.error('Messages snapshot error:', err));
 
     return () => {
       unsubTrips(); unsubVans(); unsubGallery(); unsubHires(); unsubMessages();

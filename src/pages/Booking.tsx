@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Calendar, MapPin, CreditCard, Phone, User, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
-import axios from 'axios';
 
 export default function Booking() {
   const { tripId } = useParams();

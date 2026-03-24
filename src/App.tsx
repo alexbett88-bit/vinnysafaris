@@ -44,8 +44,12 @@ export default function App() {
             role: authUser.email === 'alexbett88@gmail.com' ? 'admin' : 'customer',
             createdAt: new Date().toISOString(),
           };
-          await setDoc(docRef, newProfile);
-          setProfile(newProfile);
+          try {
+            await setDoc(docRef, newProfile);
+            setProfile(newProfile);
+          } catch (error) {
+            console.error('Error creating user profile:', error);
+          }
         }
       } else {
         setProfile(null);
