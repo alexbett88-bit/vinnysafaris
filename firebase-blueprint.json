@@ -1,0 +1,125 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "customer"] },
+        "phoneNumber": { "type": "string" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Van": {
+      "title": "Van",
+      "description": "Vehicle inventory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "maintenance"] }
+      },
+      "required": ["id", "name", "status"]
+    },
+    "Trip": {
+      "title": "Trip",
+      "description": "Scheduled tour trip",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "destination": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "pricePerSeat": { "type": "number" },
+        "vanId": { "type": "string" },
+        "seats": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "seatNumber": { "type": "number" },
+              "status": { "type": "string", "enum": ["available", "pending", "booked"] },
+              "userId": { "type": "string" },
+              "userName": { "type": "string" },
+              "userPhone": { "type": "string" },
+              "paymentStatus": { "type": "string", "enum": ["unpaid", "paid"] },
+              "transactionId": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["id", "destination", "date", "pricePerSeat", "vanId"]
+    },
+    "PrivateHire": {
+      "title": "Private Hire",
+      "description": "Private vehicle charter request",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "pickupPoint": { "type": "string" },
+        "destination": { "type": "string" },
+        "departureDate": { "type": "string", "format": "date-time" },
+        "returnDate": { "type": "string", "format": "date-time" },
+        "numVans": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "cancelled"] },
+        "totalPrice": { "type": "number" }
+      },
+      "required": ["id", "userId", "pickupPoint", "destination", "departureDate", "numVans"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "A contact form message",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "subject": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "message", "createdAt"]
+    },
+    "GalleryItem": {
+      "title": "Gallery Item",
+      "description": "An image in the gallery",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string", "enum": ["Fleet", "Tours", "Team"] },
+        "url": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "url", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/vans/{vanId}": {
+      "schema": "Van",
+      "description": "Vehicle inventory"
+    },
+    "/trips/{tripId}": {
+      "schema": "Trip",
+      "description": "Scheduled tour trips"
+    },
+    "/privateHires/{hireId}": {
+      "schema": "PrivateHire",
+      "description": "Private charter requests"
+    },
+    "/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Contact form messages"
+    },
+    "/gallery/{itemId}": {
+      "schema": "GalleryItem",
+      "description": "Gallery images"
+    }
+  }
+}

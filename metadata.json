@@ -1,0 +1,5 @@
+{
+  "name": "Vinny Safaris",
+  "description": "A modern booking platform for Vinny Safaris, featuring seat-based tour bookings, private van hires, and M-Pesa integration.",
+  "requestFramePermissions": ["geolocation"]
+}
