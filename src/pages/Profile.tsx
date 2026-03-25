@@ -68,6 +68,19 @@ export default function Profile() {
     }
   };
 
+  if (!user) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-20 text-center">
+        <div className="card p-12">
+          <User className="w-16 h-16 text-gray-200 mx-auto mb-6" />
+          <h2 className="text-2xl font-display font-bold text-safari-grey mb-4">Guest Access</h2>
+          <p className="text-gray-500 mb-8">Please login to view your profile and booking history.</p>
+          <button onClick={() => navigate('/login')} className="btn-primary w-full">Login / Sign Up</button>
+        </div>
+      </div>
+    );
+  }
+
   if (!profile) return <div className="p-20 text-center">Loading profile...</div>;
 
   return (

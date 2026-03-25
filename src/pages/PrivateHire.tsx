@@ -11,15 +11,12 @@ export default function PrivateHire() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!auth.currentUser) {
-      toast.error('Please login to request a private hire');
-      return;
-    }
-
     setLoading(true);
     const formData = new FormData(e.currentTarget);
     const hireRequest = {
-      userId: auth.currentUser.uid,
+      userId: auth.currentUser?.uid || 'guest',
+      customerName: formData.get('fullName'),
+      customerPhone: formData.get('phone'),
       pickupPoint: formData.get('pickup'),
       destination: formData.get('destination'),
       departureDate: formData.get('departure'),
@@ -123,6 +120,23 @@ export default function PrivateHire() {
           </h3>
           
           <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-bold mb-2 text-gray-600">Full Name</label>
+                <div className="relative">
+                  <Send className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input name="fullName" required className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-gray-100 focus:border-safari-orange" placeholder="John Doe" defaultValue={auth.currentUser?.displayName || ''} />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2 text-gray-600">Phone Number</label>
+                <div className="relative">
+                  <Send className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input name="phone" required className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-gray-100 focus:border-safari-orange" placeholder="0712345678" />
+                </div>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-bold mb-2 text-gray-600">Pickup Point</label>

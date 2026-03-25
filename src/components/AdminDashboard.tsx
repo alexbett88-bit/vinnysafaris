@@ -495,7 +495,8 @@ export default function AdminDashboard() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 text-sm">
                       <div><p className="text-gray-400 text-xs">Departure</p><p className="font-medium">{format(new Date(hire.departureDate), 'PP')}</p></div>
                       <div><p className="text-gray-400 text-xs">Vans</p><p className="font-medium">{hire.numVans} (11-Seaters)</p></div>
-                      <div><p className="text-gray-400 text-xs">User ID</p><p className="font-medium truncate max-w-[100px]">{hire.userId}</p></div>
+                      <div><p className="text-gray-400 text-xs">Customer</p><p className="font-medium">{hire.customerName || 'Guest'}</p></div>
+                      <div><p className="text-gray-400 text-xs">Phone</p><p className="font-medium">{hire.customerPhone || 'N/A'}</p></div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">

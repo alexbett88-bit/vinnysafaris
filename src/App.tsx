@@ -102,20 +102,12 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/trips" element={<Trips />} />
-            <Route path="/book/:tripId" element={
-              <ProtectedRoute>
-                <Booking />
-              </ProtectedRoute>
-            } />
+            <Route path="/book/:tripId" element={<Booking />} />
             <Route path="/private-hire" element={<PrivateHire />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Auth />} />
-            <Route path="/profile" element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/admin" element={
               <ProtectedRoute adminOnly>
                 <AdminDashboard />
