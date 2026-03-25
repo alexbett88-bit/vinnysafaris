@@ -1,5 +1,5 @@
 {
   "name": "Vinny Safaris",
-  "description": "A modern booking platform for Vinny Safaris, featuring seat-based tour bookings, private van hires, and a secure admin dashboard.",
+  "description": "Premium Safari and Travel Booking Platform for Vinny Safaris, Eldama Ravine. Developed by Alex Bett.",
   "requestFramePermissions": ["geolocation"]
 }
