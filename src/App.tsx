@@ -30,6 +30,10 @@ import { useAuth } from './hooks/useAuth';
 export default function App() {
   const { user, profile, loading, isDemo, logout } = useAuth();
 
+  React.useEffect(() => {
+    document.title = "Vinny Safaris | Premium Travel & Booking";
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-safari-cream">
