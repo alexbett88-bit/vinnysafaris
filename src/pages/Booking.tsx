@@ -47,7 +47,7 @@ export default function Booking() {
           ? { 
               ...s, 
               status: 'pending', 
-              userId: auth.currentUser?.uid, 
+              userId: auth.currentUser?.uid || 'guest', 
               userName: fullName, 
               userPhone: phoneNumber,
               bookedAt: new Date().toISOString()
