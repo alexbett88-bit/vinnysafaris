@@ -47,12 +47,12 @@ export default function Auth() {
         className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-safari-orange/10 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-40 h-40 bg-safari-orange/10 rounded-full mb-4">
             {!logoError ? (
               <img 
-                src="https://lh3.googleusercontent.com/d/1axT-mMbOru3TokM3seZ9gVyRh7ds43xr" 
+                src="https://lh3.googleusercontent.com/d/1ogiO1Um4hOw4uCs6z9FOdHXUtixjDyQU" 
                 alt="Vinny Safaris Logo" 
-                className="w-16 h-16 object-contain"
+                className="w-32 h-32 object-contain"
                 referrerPolicy="no-referrer"
                 onError={() => setLogoError(true)}
               />

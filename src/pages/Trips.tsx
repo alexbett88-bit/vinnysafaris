@@ -49,19 +49,19 @@ export default function Trips() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <div className="relative h-64 rounded-3xl overflow-hidden mb-12 shadow-xl">
+    <div className="max-w-7xl mx-auto px-4 py-6 md:py-12">
+      <div className="relative h-48 md:h-64 rounded-3xl overflow-hidden mb-8 md:mb-12 shadow-xl">
         <img 
           src="https://lh3.googleusercontent.com/d/1YUZZ8-lIzQA2kknaA8-qeLH5OPAsx_aI" 
           alt="Join-In Trips" 
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-center p-6">
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-center p-4 md:p-6">
           <div>
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">Join-In Trips</h1>
-            <p className="text-gray-100 max-w-2xl mx-auto text-lg">
-              Book a single seat and join a group of adventurers. Perfect for solo travelers or small groups.
+            <h1 className="text-3xl md:text-5xl font-display font-bold text-white mb-2 md:mb-4">Join-In Trips</h1>
+            <p className="text-gray-100 max-w-2xl mx-auto text-sm md:text-lg">
+              Book a single seat and join a group of adventurers.
             </p>
           </div>
         </div>
@@ -69,25 +69,25 @@ export default function Trips() {
 
       {/* Admin Actions */}
       {isAdmin && (
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-6 md:mb-8">
           <button 
             onClick={seedDemoTrip}
             disabled={isSeeding}
-            className="flex items-center space-x-2 bg-safari-green text-white px-6 py-3 rounded-xl font-bold hover:bg-safari-leaf transition-all shadow-lg disabled:opacity-50"
+            className="flex items-center space-x-2 bg-safari-green text-white px-5 py-3 md:px-6 md:py-3 rounded-xl font-bold hover:bg-safari-leaf transition-all shadow-lg disabled:opacity-50 text-sm md:text-base"
           >
-            <Plus className="w-5 h-5" />
-            <span>{isSeeding ? 'Adding Trip...' : 'Add Demo Trip (Nyahururu)'}</span>
+            <Plus className="w-4 h-4 md:w-5 md:h-5" />
+            <span>{isSeeding ? 'Adding...' : 'Add Demo Trip'}</span>
           </button>
         </div>
       )}
 
       {/* Search Bar */}
-      <div className="max-w-xl mx-auto mb-12 relative">
+      <div className="max-w-xl mx-auto mb-8 md:mb-12 relative">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
         <input 
           type="text" 
-          placeholder="Search destination (e.g. Mombasa, Nakuru...)"
-          className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-gray-100 focus:border-safari-orange focus:ring-0 transition-all shadow-sm"
+          placeholder="Search destination..."
+          className="w-full pl-12 pr-4 py-3.5 md:py-4 rounded-2xl border-2 border-gray-100 focus:border-safari-orange focus:ring-0 transition-all shadow-sm text-sm md:text-base"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

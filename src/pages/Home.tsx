@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <div className="space-y-20 pb-20">
       {/* Hero Section */}
-      <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[70vh] md:h-[85vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://lh3.googleusercontent.com/d/1kSAiISGaIMxEznkecltsLP-aLmvBEi8N" 
@@ -41,21 +41,27 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <span className="inline-block bg-safari-red px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-6 shadow-lg shadow-safari-red/20">
+            <img 
+              src="https://lh3.googleusercontent.com/d/1ogiO1Um4hOw4uCs6z9FOdHXUtixjDyQU" 
+              alt="Vinny Safaris Logo" 
+              className="w-64 md:w-96 h-auto object-contain mx-auto mb-2 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+              referrerPolicy="no-referrer"
+            />
+            <span className="inline-block bg-safari-red px-4 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4 md:mb-6 shadow-lg shadow-safari-red/20">
               Adventure Awaits
             </span>
-            <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-7xl font-display font-bold mb-4 md:mb-6 leading-tight">
               Experience Kenya with <span className="bg-gradient-to-r from-safari-red via-safari-yellow to-safari-green bg-clip-text text-transparent">Vinny Safaris</span>
             </h1>
-            <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
+            <p className="text-base md:text-xl text-gray-200 mb-8 md:mb-10 max-w-2xl mx-auto">
               From Eldama Ravine to the coast, we provide the most comfortable and secure 
               travel experience in our brand new 11-seater fleet.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/trips" className="btn-primary w-full sm:w-auto text-lg px-10">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 sm:px-0">
+              <Link to="/trips" className="btn-primary w-full sm:w-auto text-lg px-10 py-4 sm:py-3">
                 Book a Seat
               </Link>
-              <Link to="/private-hire" className="bg-white text-safari-grey px-10 py-3 rounded-lg font-bold hover:bg-gray-100 transition-all w-full sm:w-auto text-lg">
+              <Link to="/private-hire" className="bg-white text-safari-grey px-10 py-4 sm:py-3 rounded-lg font-bold hover:bg-gray-100 transition-all w-full sm:w-auto text-lg">
                 Private Hire
               </Link>
             </div>
@@ -64,7 +70,7 @@ export default function Home() {
       </section>
 
       {/* Stats / Why Choose Us */}
-      <section className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <section className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
         {[
           { icon: ShieldCheck, title: "Safety First", desc: "Our drivers are highly trained and our fleet is monitored 24/7 for your peace of mind." },
           { icon: Zap, title: "Modern Fleet", desc: "Travel in style with our brand new 11-seater vans equipped with AC and charging ports." },
@@ -72,17 +78,17 @@ export default function Home() {
         ].map((item, i) => (
           <motion.div 
             key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.2 }}
-            className="card p-8 text-center group hover:border-safari-orange transition-all"
+            transition={{ delay: i * 0.1 }}
+            className="card p-6 md:p-8 text-center group hover:border-safari-orange transition-all active:scale-[0.98]"
           >
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-safari-orange/10 rounded-2xl mb-6 group-hover:bg-safari-orange group-hover:text-white transition-all">
-              <item.icon className="w-8 h-8 text-safari-orange group-hover:text-white" />
+            <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 bg-safari-orange/10 rounded-2xl mb-4 md:mb-6 group-hover:bg-safari-orange group-hover:text-white transition-all">
+              <item.icon className="w-7 h-7 md:w-8 md:h-8 text-safari-orange group-hover:text-white" />
             </div>
-            <h3 className="text-xl font-bold mb-3">{item.title}</h3>
-            <p className="text-gray-500 leading-relaxed">{item.desc}</p>
+            <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3">{item.title}</h3>
+            <p className="text-gray-500 text-sm md:text-base leading-relaxed">{item.desc}</p>
           </motion.div>
         ))}
       </section>

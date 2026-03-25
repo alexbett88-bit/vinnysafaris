@@ -38,7 +38,7 @@ export default function VanSeatMap({ seats, onSeatClick, selectedSeat }: VanSeat
         onClick={() => status === 'available' && onSeatClick(number)}
         disabled={status !== 'available'}
         className={cn(
-          "w-12 h-12 rounded-lg flex items-center justify-center text-xs font-bold transition-all shadow-sm border-2",
+          "w-14 h-14 md:w-12 md:h-12 rounded-xl md:rounded-lg flex items-center justify-center text-sm md:text-xs font-bold transition-all shadow-sm border-2",
           status === 'available' && !isSelected && "bg-white border-gray-200 text-gray-600 hover:border-safari-green",
           status === 'available' && isSelected && "bg-safari-green border-safari-green text-white",
           status === 'pending' && "bg-yellow-400 border-yellow-500 text-white cursor-not-allowed",
@@ -51,20 +51,20 @@ export default function VanSeatMap({ seats, onSeatClick, selectedSeat }: VanSeat
   };
 
   return (
-    <div className="bg-gray-100 p-6 rounded-3xl border-4 border-gray-300 max-w-[320px] mx-auto relative shadow-inner">
+    <div className="bg-gray-100 p-6 rounded-3xl border-4 border-gray-300 max-w-[340px] mx-auto relative shadow-inner">
       {/* Front Section */}
       <div className="flex justify-between mb-8 px-2">
-        <div className="flex space-x-2">
+        <div className="flex space-x-3 md:space-x-2">
           <SeatIcon number={1} />
           <SeatIcon number={2} />
         </div>
-        <div className="w-12 h-12 bg-gray-400 rounded-lg flex items-center justify-center text-white text-[10px] opacity-50">
+        <div className="w-14 h-14 md:w-12 md:h-12 bg-gray-400 rounded-xl md:rounded-lg flex items-center justify-center text-white text-[10px] opacity-50">
           Driver
         </div>
       </div>
 
       {/* Rows */}
-      <div className="space-y-4">
+      <div className="space-y-5 md:space-y-4">
         {/* Row 1 */}
         <div className="flex justify-between px-2">
           <SeatIcon number={3} />

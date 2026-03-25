@@ -67,16 +67,40 @@ export default function Booking() {
     }
   };
 
+  function cn(...inputs: any[]) {
+    return inputs.filter(Boolean).join(' ');
+  }
+
   if (!trip) return <div className="p-20 text-center">Loading trip details...</div>;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <div className="max-w-5xl mx-auto px-4 py-6 md:py-12">
+      {/* Step Indicator */}
+      <div className="flex items-center justify-center mb-8 md:hidden">
+        {[1, 2, 3].map((s) => (
+          <React.Fragment key={s}>
+            <div className={cn(
+              "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors",
+              step >= s ? "bg-safari-orange text-white" : "bg-gray-200 text-gray-500"
+            )}>
+              {s}
+            </div>
+            {s < 3 && (
+              <div className={cn(
+                "w-8 h-0.5 mx-1",
+                step > s ? "bg-safari-orange" : "bg-gray-200"
+              )} />
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
         {/* Left: Seat Map */}
         <div className="space-y-8">
           <div className="text-center lg:text-left">
-            <h1 className="text-3xl font-display font-bold text-safari-grey mb-2">Select Your Seat</h1>
-            <p className="text-gray-500">Pick your favorite spot for the journey to {trip.destination}</p>
+            <h1 className="text-2xl md:text-3xl font-display font-bold text-safari-grey mb-2">Select Your Seat</h1>
+            <p className="text-sm md:text-base text-gray-500">Pick your favorite spot for the journey to {trip.destination}</p>
           </div>
           
           <VanSeatMap 
@@ -87,8 +111,8 @@ export default function Booking() {
         </div>
 
         {/* Right: Booking Details */}
-        <div className="space-y-6">
-          <div className="card p-8">
+        <div className="space-y-6 pb-24 md:pb-0">
+          <div className="card p-6 md:p-8">
             <div className="flex items-center justify-between mb-6 pb-6 border-b">
               <div>
                 <h2 className="text-2xl font-bold">{trip.destination}</h2>
@@ -118,10 +142,19 @@ export default function Booking() {
                         : "Please select a seat from the map to continue"}
                     </p>
                   </div>
+                  <div className="md:hidden fixed bottom-20 left-0 right-0 p-4 bg-white border-t border-gray-100 z-40">
+                    <button 
+                      disabled={!selectedSeat}
+                      onClick={() => setStep(2)}
+                      className="w-full btn-primary disabled:opacity-50 py-4 shadow-xl"
+                    >
+                      Continue to Details
+                    </button>
+                  </div>
                   <button 
                     disabled={!selectedSeat}
                     onClick={() => setStep(2)}
-                    className="w-full btn-primary disabled:opacity-50"
+                    className="hidden md:block w-full btn-primary disabled:opacity-50"
                   >
                     Continue to Details
                   </button>
@@ -150,7 +183,7 @@ export default function Booking() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-bold mb-1 text-gray-600">M-Pesa Phone Number</label>
+                    <label className="block text-sm font-bold mb-1 text-gray-600">Phone Number</label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                       <input 
@@ -191,7 +224,7 @@ export default function Booking() {
                     </p>
                     
                     <div className="bg-white p-4 rounded-xl shadow-sm border mb-6">
-                      <p className="text-xs text-gray-400 uppercase font-bold mb-1">M-Pesa Number</p>
+                      <p className="text-xs text-gray-400 uppercase font-bold mb-1">Payment Number</p>
                       <p className="text-2xl font-black text-safari-green">0729770411</p>
                       <p className="text-sm font-bold text-gray-500">(Vinny Safaris)</p>
                     </div>

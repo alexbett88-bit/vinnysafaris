@@ -9,19 +9,21 @@ export default function Footer() {
     <footer className="bg-safari-dark text-white pt-16 pb-8 border-t border-safari-green/20">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
         <div className="space-y-6">
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center">
             {!logoError ? (
               <img 
-                src="https://lh3.googleusercontent.com/d/1axT-mMbOru3TokM3seZ9gVyRh7ds43xr" 
+                src="https://lh3.googleusercontent.com/d/1ogiO1Um4hOw4uCs6z9FOdHXUtixjDyQU" 
                 alt="Vinny Safaris Logo" 
-                className="w-16 h-16 object-contain"
+                className="w-48 h-48 object-contain"
                 referrerPolicy="no-referrer"
                 onError={() => setLogoError(true)}
               />
             ) : (
-              <Compass className="w-8 h-8 text-safari-yellow" />
+              <div className="flex items-center space-x-2">
+                <Compass className="w-8 h-8 text-safari-yellow" />
+                <span className="text-2xl font-display font-bold tracking-tight bg-gradient-to-r from-safari-red via-safari-yellow to-safari-green bg-clip-text text-transparent">Vinny Safaris</span>
+              </div>
             )}
-            <span className="text-2xl font-display font-bold tracking-tight bg-gradient-to-r from-safari-red via-safari-yellow to-safari-green bg-clip-text text-transparent">Vinny Safaris</span>
           </Link>
           <p className="text-gray-400 text-sm leading-relaxed">
             Your trusted travel partner in Eldama Ravine. Providing safe, comfortable, 

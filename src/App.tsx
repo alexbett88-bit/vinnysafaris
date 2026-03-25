@@ -8,6 +8,7 @@ import { UserProfile } from './types';
 
 // Components
 import Navbar from './components/Navbar';
+import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
 import Auth from './components/Auth';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -69,7 +70,7 @@ export default function App() {
 
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen pb-20 md:pb-0">
         <Navbar />
         <main className="flex-grow">
           <Routes>
@@ -97,6 +98,7 @@ export default function App() {
           </Routes>
         </main>
         <Footer />
+        <BottomNav />
         <Toaster position="top-center" richColors />
         
         {/* Floating WhatsApp Button */}
@@ -104,7 +106,7 @@ export default function App() {
           href="https://wa.me/254729770411" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform active:scale-95 group"
+          className="fixed bottom-24 md:bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform active:scale-95 group"
           aria-label="Chat on WhatsApp"
         >
           <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

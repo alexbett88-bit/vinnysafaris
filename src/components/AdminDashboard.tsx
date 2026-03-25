@@ -20,6 +20,8 @@ export default function AdminDashboard() {
   const [showAddGallery, setShowAddGallery] = React.useState(false);
   const [showAddVan, setShowAddVan] = React.useState(false);
   const [selectedTrip, setSelectedTrip] = React.useState<Trip | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = React.useState<{ col: string, id: string } | null>(null);
+  const [isSeeding, setIsSeeding] = React.useState(false);
 
   // Derived bookings for the "Bookings" tab
   const allBookings = React.useMemo(() => {
@@ -212,12 +214,23 @@ export default function AdminDashboard() {
   };
 
   const deleteItem = async (col: string, id: string) => {
-    if (confirm('Are you sure?')) {
-      try {
-        await deleteDoc(doc(db, col, id));
-        toast.success('Deleted successfully');
-      } catch (error) { toast.error('Delete failed'); }
+    try {
+      await deleteDoc(doc(db, col, id));
+      toast.success('Deleted successfully');
+      setDeleteConfirm(null);
+    } catch (error) { toast.error('Delete failed'); }
+  };
+
+  const handleSeed = async () => {
+    if (isSeeding) return;
+    setIsSeeding(true);
+    const result = await seedDatabase();
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
     }
+    setIsSeeding(false);
   };
 
   const TabButton = ({ id, label, icon: Icon }: { id: typeof activeTab, label: string, icon: any }) => (
@@ -236,10 +249,20 @@ export default function AdminDashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <h1 className="text-3xl font-display font-bold text-safari-grey flex items-center space-x-3">
-          <LayoutDashboard className="w-8 h-8 text-safari-orange" />
-          <span>Admin Dashboard</span>
-        </h1>
+        <div className="flex items-center space-x-4">
+          <h1 className="text-3xl font-display font-bold text-safari-grey flex items-center space-x-3">
+            <LayoutDashboard className="w-8 h-8 text-safari-orange" />
+            <span>Admin Dashboard</span>
+          </h1>
+          <button 
+            onClick={handleSeed} 
+            disabled={isSeeding}
+            className="flex items-center space-x-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-xs font-bold transition-colors disabled:opacity-50"
+          >
+            <Database className={`w-3 h-3 ${isSeeding ? 'animate-spin' : ''}`} />
+            <span>{isSeeding ? 'Seeding...' : 'Seed Data'}</span>
+          </button>
+        </div>
         <div className="flex bg-white p-1 rounded-xl shadow-sm border overflow-x-auto">
           <TabButton id="trips" label="Trips" icon={Calendar} />
           <TabButton id="bookings" label="Bookings" icon={Users} />
@@ -275,7 +298,7 @@ export default function AdminDashboard() {
                   </div>
                   <div className="flex space-x-2">
                     <button onClick={() => setSelectedTrip(trip)} className="p-2 text-safari-green hover:bg-safari-green/10 rounded-lg"><Eye className="w-5 h-5" /></button>
-                    <button onClick={() => deleteItem('trips', trip.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg"><Trash2 className="w-5 h-5" /></button>
+                    <button onClick={() => setDeleteConfirm({ col: 'trips', id: trip.id })} className="p-2 text-red-500 hover:bg-red-50 rounded-lg"><Trash2 className="w-5 h-5" /></button>
                   </div>
                 </div>
               ))}
@@ -398,7 +421,7 @@ export default function AdminDashboard() {
                     <div className="w-12 h-12 bg-safari-green/10 rounded-xl flex items-center justify-center">
                       <Bus className="w-6 h-6 text-safari-green" />
                     </div>
-                    <button onClick={() => deleteItem('vans', van.id)} className="text-red-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                    <button onClick={() => setDeleteConfirm({ col: 'vans', id: van.id })} className="text-red-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
                   </div>
                   <h3 className="font-bold text-lg">{van.name}</h3>
                   <p className={cn("text-sm font-bold mt-1", van.status === 'active' ? "text-safari-green" : "text-red-500")}>
@@ -433,7 +456,7 @@ export default function AdminDashboard() {
                   <img src={item.url} alt={item.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 text-center">
                     <p className="text-white text-xs font-bold mb-2">{item.title}</p>
-                    <button onClick={() => deleteItem('gallery', item.id)} className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600">
+                    <button onClick={() => setDeleteConfirm({ col: 'gallery', id: item.id })} className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600">
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
@@ -470,7 +493,7 @@ export default function AdminDashboard() {
                   <div className="flex items-center space-x-2">
                     <button onClick={() => updateHireStatus(hire.id, 'confirmed')} className="p-2 text-safari-green hover:bg-safari-green/10 rounded-lg" title="Confirm"><CheckCircle className="w-6 h-6" /></button>
                     <button onClick={() => updateHireStatus(hire.id, 'cancelled')} className="p-2 text-red-500 hover:bg-red-50 rounded-lg" title="Cancel"><XCircle className="w-6 h-6" /></button>
-                    <button onClick={() => deleteItem('privateHires', hire.id)} className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg"><Trash2 className="w-5 h-5" /></button>
+                    <button onClick={() => setDeleteConfirm({ col: 'privateHires', id: hire.id })} className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg"><Trash2 className="w-5 h-5" /></button>
                   </div>
                 </div>
               ))}
@@ -603,13 +626,29 @@ export default function AdminDashboard() {
                               <button onClick={() => handleCancelBooking(selectedTrip.id, seat.seatNumber)} className="text-red-500"><XCircle className="w-4 h-4" /></button>
                             </div>
                           ) : (
-                            <button onClick={() => handleCancelBooking(selectedTrip.id, seat.seatNumber)} className="text-red-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                            <button onClick={() => setDeleteConfirm({ col: 'trips', id: selectedTrip.id })} className="text-red-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
                           )}
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
+        {deleteConfirm && (
+          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-8 text-center">
+              <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Trash2 className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Confirm Delete</h3>
+              <p className="text-gray-500 mb-6">Are you sure you want to delete this item? This action cannot be undone.</p>
+              <div className="flex space-x-4">
+                <button onClick={() => setDeleteConfirm(null)} className="flex-1 py-3 rounded-lg border font-bold">Cancel</button>
+                <button onClick={() => deleteItem(deleteConfirm.col, deleteConfirm.id)} className="flex-1 bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors">Delete</button>
               </div>
             </motion.div>
           </div>
