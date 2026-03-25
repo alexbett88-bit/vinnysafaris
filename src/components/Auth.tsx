@@ -69,7 +69,7 @@ export default function Auth() {
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="w-full flex items-center justify-center space-x-3 bg-white border-2 border-gray-200 text-gray-700 font-bold py-3 px-4 rounded-xl hover:bg-gray-50 transition-all active:scale-95 disabled:opacity-50"
+          className="w-full flex items-center justify-center space-x-3 bg-white border-2 border-gray-200 text-gray-700 font-bold py-3 px-4 rounded-xl hover:bg-gray-50 transition-all active:scale-95 disabled:opacity-50 mb-4"
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-gray-300 border-t-safari-orange rounded-full animate-spin"></div>
@@ -79,6 +79,42 @@ export default function Auth() {
               <span>Login or Sign Up with Google</span>
             </>
           )}
+        </button>
+
+        <button
+          onClick={() => {
+            const demoUser = {
+              uid: 'demo-admin-123',
+              email: 'alexbett88@gmail.com',
+              displayName: 'Demo Admin',
+              role: 'admin',
+              createdAt: new Date().toISOString()
+            };
+            localStorage.setItem('demo_user', JSON.stringify(demoUser));
+            window.location.href = '/admin';
+          }}
+          className="w-full flex items-center justify-center space-x-3 bg-safari-orange/10 border-2 border-safari-orange/20 text-safari-orange font-bold py-3 px-4 rounded-xl hover:bg-safari-orange/20 transition-all active:scale-95 mb-4"
+        >
+          <Compass className="w-5 h-5" />
+          <span>Quick Demo (Admin Access)</span>
+        </button>
+
+        <button
+          onClick={() => {
+            const demoUser = {
+              uid: 'demo-user-456',
+              email: 'traveler@example.com',
+              displayName: 'Demo Traveler',
+              role: 'customer',
+              createdAt: new Date().toISOString()
+            };
+            localStorage.setItem('demo_user', JSON.stringify(demoUser));
+            window.location.href = '/trips';
+          }}
+          className="w-full flex items-center justify-center space-x-3 bg-safari-dark/5 border-2 border-safari-dark/10 text-safari-dark font-bold py-3 px-4 rounded-xl hover:bg-safari-dark/10 transition-all active:scale-95"
+        >
+          <Compass className="w-5 h-5" />
+          <span>Quick Demo (User Access)</span>
         </button>
 
         <p className="mt-8 text-center text-xs text-gray-400 uppercase tracking-widest font-bold">

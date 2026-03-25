@@ -29,8 +29,20 @@ export default function App() {
   const [user, setUser] = React.useState<any>(null);
   const [profile, setProfile] = React.useState<UserProfile | null>(null);
   const [loading, setLoading] = React.useState(true);
+  const [isDemo, setIsDemo] = React.useState(false);
 
   React.useEffect(() => {
+    // Check for demo user in localStorage
+    const demoUserStr = localStorage.getItem('demo_user');
+    if (demoUserStr) {
+      const demoUser = JSON.parse(demoUserStr);
+      setUser(demoUser);
+      setProfile(demoUser);
+      setIsDemo(true);
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       setUser(authUser);
       if (authUser) {
@@ -56,11 +68,23 @@ export default function App() {
         }
       } else {
         setProfile(null);
+        setIsDemo(false);
       }
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
+
+  const handleLogout = async () => {
+    if (isDemo) {
+      localStorage.removeItem('demo_user');
+      setUser(null);
+      setProfile(null);
+      setIsDemo(false);
+    } else {
+      await auth.signOut();
+    }
+  };
 
   if (loading) {
     return (

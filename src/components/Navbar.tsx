@@ -42,6 +42,15 @@ export default function Navbar() {
 
   const isAdmin = checkIsAdmin(user, profile);
 
+  const handleLogout = async () => {
+    if (localStorage.getItem('demo_user')) {
+      localStorage.removeItem('demo_user');
+      window.location.href = '/';
+    } else {
+      await signOut(auth);
+    }
+  };
+
   return (
     <nav className="hidden md:block bg-safari-dark/98 backdrop-blur-xl text-white sticky top-0 z-50 shadow-2xl border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -105,7 +114,7 @@ export default function Navbar() {
                     <User className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
                   </Link>
                   <button
-                    onClick={() => signOut(auth)}
+                    onClick={handleLogout}
                     className="p-2.5 text-gray-500 hover:text-safari-red transition-colors"
                     title="Logout"
                   >
