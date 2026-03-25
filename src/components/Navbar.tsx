@@ -7,15 +7,18 @@ import { doc, getDoc } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'motion/react';
 import { UserProfile } from '../types';
 
+import { checkIsAdmin } from '../lib/auth-utils';
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [logoError, setLogoError] = React.useState(false);
   const [profile, setProfile] = React.useState<UserProfile | null>(null);
+  const [user, setUser] = React.useState<any>(null);
   const location = useLocation();
-  const user = auth.currentUser;
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+      setUser(authUser);
       if (authUser) {
         const docRef = doc(db, 'users', authUser.uid);
         const docSnap = await getDoc(docRef);
@@ -37,7 +40,7 @@ export default function Navbar() {
     { name: 'Contact', path: '/contact' },
   ];
 
-  const isAdmin = profile?.role === 'admin';
+  const isAdmin = checkIsAdmin(user, profile);
 
   return (
     <nav className="hidden md:block bg-safari-dark/98 backdrop-blur-xl text-white sticky top-0 z-50 shadow-2xl border-b border-white/5">

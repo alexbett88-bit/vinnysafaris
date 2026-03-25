@@ -7,6 +7,8 @@ import { Compass, LogIn } from 'lucide-react';
 import { motion } from 'motion/react';
 import { UserProfile } from '../types';
 
+import { ADMIN_EMAIL } from '../lib/auth-utils';
+
 export default function Auth() {
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
@@ -26,7 +28,7 @@ export default function Auth() {
           uid: user.uid,
           email: user.email!,
           displayName: user.displayName || 'User',
-          role: user.email === 'alexbett88@gmail.com' ? 'admin' : 'customer',
+          role: user.email === ADMIN_EMAIL ? 'admin' : 'customer',
           createdAt: new Date().toISOString(),
         };
         await setDoc(doc(db, 'users', user.uid), newUser);

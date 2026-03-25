@@ -6,11 +6,15 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { UserProfile } from '../types';
 
+import { checkIsAdmin } from '../lib/auth-utils';
+
 export default function BottomNav() {
   const [profile, setProfile] = React.useState<UserProfile | null>(null);
+  const [user, setUser] = React.useState<any>(null);
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+      setUser(authUser);
       if (authUser) {
         const docRef = doc(db, 'users', authUser.uid);
         const docSnap = await getDoc(docRef);
@@ -24,7 +28,7 @@ export default function BottomNav() {
     return () => unsubscribe();
   }, []);
 
-  const isAdmin = profile?.role === 'admin';
+  const isAdmin = checkIsAdmin(user, profile);
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 px-6 py-3 flex justify-between items-center shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">

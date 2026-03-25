@@ -23,6 +23,8 @@ import Profile from './pages/Profile';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
 
+import { checkIsAdmin, ADMIN_EMAIL } from './lib/auth-utils';
+
 export default function App() {
   const [user, setUser] = React.useState<any>(null);
   const [profile, setProfile] = React.useState<UserProfile | null>(null);
@@ -42,7 +44,7 @@ export default function App() {
             uid: authUser.uid,
             email: authUser.email || '',
             displayName: authUser.displayName || 'Traveler',
-            role: authUser.email === 'alexbett88@gmail.com' ? 'admin' : 'customer',
+            role: authUser.email === ADMIN_EMAIL ? 'admin' : 'customer',
             createdAt: new Date().toISOString(),
           };
           try {

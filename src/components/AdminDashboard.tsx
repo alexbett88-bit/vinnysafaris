@@ -161,11 +161,19 @@ export default function AdminDashboard() {
   const handleAddTrip = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    const vanId = formData.get('vanId') as string;
+    const dateStr = formData.get('date') as string;
+    
+    if (!vanId) {
+      toast.error('Please select a van');
+      return;
+    }
+
     const newTrip = {
-      destination: formData.get('destination'),
-      date: formData.get('date'),
+      destination: formData.get('destination') as string,
+      date: new Date(dateStr).toISOString(),
       pricePerSeat: Number(formData.get('price')),
-      vanId: formData.get('vanId'),
+      vanId: vanId,
       seats: Array.from({ length: 11 }, (_, i) => ({
         seatNumber: i + 1,
         status: 'available',
@@ -535,9 +543,18 @@ export default function AdminDashboard() {
                 <div><label className="block text-sm font-bold mb-1">Price per Seat (KES)</label><input name="price" type="number" required className="w-full p-3 rounded-lg border focus:ring-2 focus:ring-safari-orange" placeholder="3500" /></div>
                 <div>
                   <label className="block text-sm font-bold mb-1">Assign Van</label>
-                  <select name="vanId" required className="w-full p-3 rounded-lg border focus:ring-2 focus:ring-safari-orange">
-                    {vans.filter(v => v.status === 'active').map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
-                  </select>
+                  {vans.filter(v => v.status === 'active').length > 0 ? (
+                    <select name="vanId" required className="w-full p-3 rounded-lg border focus:ring-2 focus:ring-safari-orange">
+                      <option value="">Select a Van</option>
+                      {vans.filter(v => v.status === 'active').map(v => (
+                        <option key={v.id} value={v.id}>{v.name}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm font-bold border border-red-100">
+                      No active vans available. Please add a van in the Fleet tab first.
+                    </div>
+                  )}
                 </div>
                 <div className="flex space-x-4 pt-4">
                   <button type="button" onClick={() => setShowAddTrip(false)} className="flex-1 py-3 rounded-lg border font-bold">Cancel</button>
