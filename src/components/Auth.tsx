@@ -62,8 +62,8 @@ export default function Auth() {
               <Compass className="w-14 h-14 text-safari-orange" />
             )}
           </div>
-          <h2 className="text-3xl font-display font-bold text-safari-grey">Welcome Back</h2>
-          <p className="text-gray-500 mt-2">Sign in to book your next adventure with Vinny Safaris</p>
+          <h2 className="text-3xl font-display font-bold text-safari-grey">Join Vinny Safaris</h2>
+          <p className="text-gray-500 mt-2">Sign in or create an account to book your next adventure</p>
         </div>
 
         <button
@@ -76,7 +76,7 @@ export default function Auth() {
           ) : (
             <>
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
-              <span>Continue with Google</span>
+              <span>Login or Sign Up with Google</span>
             </>
           )}
         </button>

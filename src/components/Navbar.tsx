@@ -114,7 +114,7 @@ export default function Navbar() {
                 </div>
               ) : (
                 <Link to="/login" className="btn-primary py-2 px-8 text-[10px] font-bold uppercase tracking-[0.2em] shadow-xl shadow-safari-orange/10 hover:shadow-safari-orange/30 transition-all">
-                  Login
+                  Login / Sign Up
                 </Link>
               )}
             </div>
