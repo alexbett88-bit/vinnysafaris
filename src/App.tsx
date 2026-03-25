@@ -25,66 +25,10 @@ import Contact from './pages/Contact';
 
 import { checkIsAdmin, ADMIN_EMAIL } from './lib/auth-utils';
 
+import { useAuth } from './hooks/useAuth';
+
 export default function App() {
-  const [user, setUser] = React.useState<any>(null);
-  const [profile, setProfile] = React.useState<UserProfile | null>(null);
-  const [loading, setLoading] = React.useState(true);
-  const [isDemo, setIsDemo] = React.useState(false);
-
-  React.useEffect(() => {
-    // Check for demo user in localStorage
-    const demoUserStr = localStorage.getItem('demo_user');
-    if (demoUserStr) {
-      const demoUser = JSON.parse(demoUserStr);
-      setUser(demoUser);
-      setProfile(demoUser);
-      setIsDemo(true);
-      setLoading(false);
-      return;
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
-      setUser(authUser);
-      if (authUser) {
-        const docRef = doc(db, 'users', authUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setProfile(docSnap.data() as UserProfile);
-        } else {
-          // Create profile if it doesn't exist
-          const newProfile: UserProfile = {
-            uid: authUser.uid,
-            email: authUser.email || '',
-            displayName: authUser.displayName || 'Traveler',
-            role: authUser.email === ADMIN_EMAIL ? 'admin' : 'customer',
-            createdAt: new Date().toISOString(),
-          };
-          try {
-            await setDoc(docRef, newProfile);
-            setProfile(newProfile);
-          } catch (error) {
-            console.error('Error creating user profile:', error);
-          }
-        }
-      } else {
-        setProfile(null);
-        setIsDemo(false);
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const handleLogout = async () => {
-    if (isDemo) {
-      localStorage.removeItem('demo_user');
-      setUser(null);
-      setProfile(null);
-      setIsDemo(false);
-    } else {
-      await auth.signOut();
-    }
-  };
+  const { user, profile, loading, isDemo, logout } = useAuth();
 
   if (loading) {
     return (

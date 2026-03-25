@@ -12,30 +12,10 @@ interface ProtectedRouteProps {
   adminOnly?: boolean;
 }
 
-export default function ProtectedRoute({ children, adminOnly = false }: ProtectedRouteProps) {
-  const [loading, setLoading] = React.useState(true);
-  const [userProfile, setUserProfile] = React.useState<UserProfile | null>(null);
-  const [user, setUser] = React.useState<any>(null);
+import { useAuth } from '../hooks/useAuth';
 
-  React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
-      setUser(authUser);
-      if (authUser) {
-        try {
-          const userDoc = await getDoc(doc(db, 'users', authUser.uid));
-          if (userDoc.exists()) {
-            setUserProfile(userDoc.data() as UserProfile);
-          }
-        } catch (error) {
-          console.error('Error fetching user profile:', error);
-        }
-      } else {
-        setUserProfile(null);
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+export default function ProtectedRoute({ children, adminOnly = false }: ProtectedRouteProps) {
+  const { user, profile: userProfile, loading } = useAuth();
 
   if (loading) return <div className="p-20 text-center">Checking permissions...</div>;
 

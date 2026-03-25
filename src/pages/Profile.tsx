@@ -8,41 +8,46 @@ import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
+import { useAuth } from '../hooks/useAuth';
+
 export default function Profile() {
   const navigate = useNavigate();
-  const [profile, setProfile] = React.useState<UserProfile | null>(null);
+  const { user, profile, logout } = useAuth();
   const [myHires, setMyHires] = React.useState<PrivateHire[]>([]);
   const [isEditing, setIsEditing] = React.useState(false);
   const [editPhone, setEditPhone] = React.useState('');
   const [editName, setEditName] = React.useState('');
   const [loading, setLoading] = React.useState(false);
-  const user = auth.currentUser;
 
   React.useEffect(() => {
     if (!user) return;
     
-    const unsubscribeProfile = onSnapshot(doc(db, 'users', user.uid), (doc) => {
-      if (doc.exists()) {
-        const data = doc.data() as UserProfile;
-        setProfile(data);
-        setEditPhone(data.phoneNumber || '');
-        setEditName(data.displayName || '');
-      }
-    });
+    // If it's a demo user, we don't have a real Firestore profile to listen to
+    // unless we want to mock that too. For now, let's just use the profile from useAuth.
+    if (profile) {
+      setEditPhone(profile.phoneNumber || '');
+      setEditName(profile.displayName || '');
+    }
 
+    // We can still try to fetch hires if the demo user ID matches something in DB,
+    // but for demo purposes, it might be empty.
     const q = query(collection(db, 'privateHires'), where('userId', '==', user.uid));
     const unsubscribeHires = onSnapshot(q, (snapshot) => {
       setMyHires(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as PrivateHire)));
     });
 
     return () => {
-      unsubscribeProfile();
       unsubscribeHires();
     };
-  }, [user]);
+  }, [user, profile]);
 
   const handleUpdateProfile = async () => {
-    if (!user) return;
+    if (!user || !profile) return;
+    if (user.uid.startsWith('demo-')) {
+      toast.info('Profile updates are disabled in demo mode');
+      setIsEditing(false);
+      return;
+    }
     setLoading(true);
     try {
       await updateDoc(doc(db, 'users', user.uid), {
@@ -60,8 +65,7 @@ export default function Profile() {
 
   const handleLogout = async () => {
     try {
-      await auth.signOut();
-      navigate('/');
+      await logout();
       toast.success('Logged out successfully');
     } catch (error) {
       toast.error('Failed to logout');

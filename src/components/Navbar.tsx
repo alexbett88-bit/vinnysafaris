@@ -9,28 +9,13 @@ import { UserProfile } from '../types';
 
 import { checkIsAdmin } from '../lib/auth-utils';
 
+import { useAuth } from '../hooks/useAuth';
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [logoError, setLogoError] = React.useState(false);
-  const [profile, setProfile] = React.useState<UserProfile | null>(null);
-  const [user, setUser] = React.useState<any>(null);
+  const { user, profile, logout } = useAuth();
   const location = useLocation();
-
-  React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
-      setUser(authUser);
-      if (authUser) {
-        const docRef = doc(db, 'users', authUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setProfile(docSnap.data() as UserProfile);
-        }
-      } else {
-        setProfile(null);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -43,12 +28,7 @@ export default function Navbar() {
   const isAdmin = checkIsAdmin(user, profile);
 
   const handleLogout = async () => {
-    if (localStorage.getItem('demo_user')) {
-      localStorage.removeItem('demo_user');
-      window.location.href = '/';
-    } else {
-      await signOut(auth);
-    }
+    await logout();
   };
 
   return (

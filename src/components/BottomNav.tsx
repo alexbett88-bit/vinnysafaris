@@ -8,25 +8,10 @@ import { UserProfile } from '../types';
 
 import { checkIsAdmin } from '../lib/auth-utils';
 
-export default function BottomNav() {
-  const [profile, setProfile] = React.useState<UserProfile | null>(null);
-  const [user, setUser] = React.useState<any>(null);
+import { useAuth } from '../hooks/useAuth';
 
-  React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
-      setUser(authUser);
-      if (authUser) {
-        const docRef = doc(db, 'users', authUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setProfile(docSnap.data() as UserProfile);
-        }
-      } else {
-        setProfile(null);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+export default function BottomNav() {
+  const { user, profile } = useAuth();
 
   const isAdmin = checkIsAdmin(user, profile);
 

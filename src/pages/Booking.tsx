@@ -9,6 +9,57 @@ import { Calendar, MapPin, CreditCard, Phone, User, CheckCircle } from 'lucide-r
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId: string | undefined;
+    email: string | null | undefined;
+    emailVerified: boolean | undefined;
+    isAnonymous: boolean | undefined;
+    tenantId: string | null | undefined;
+    providerInfo: {
+      providerId: string;
+      displayName: string | null;
+      email: string | null;
+      photoUrl: string | null;
+    }[];
+  }
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      emailVerified: auth.currentUser?.emailVerified,
+      isAnonymous: auth.currentUser?.isAnonymous,
+      tenantId: auth.currentUser?.tenantId,
+      providerInfo: auth.currentUser?.providerData.map(provider => ({
+        providerId: provider.providerId,
+        displayName: provider.displayName,
+        email: provider.email,
+        photoUrl: provider.photoURL
+      })) || []
+    },
+    operationType,
+    path
+  }
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
+
 export default function Booking() {
   const { tripId } = useParams();
   const navigate = useNavigate();
@@ -42,26 +93,37 @@ export default function Booking() {
     setLoading(true);
     try {
       // 1. Mark seat as pending in Firestore
-      const updatedSeats = trip.seats.map(s => 
-        s.seatNumber === selectedSeat 
-          ? { 
-              ...s, 
-              status: 'pending', 
-              userId: auth.currentUser?.uid || 'guest', 
-              userName: fullName, 
-              userPhone: phoneNumber,
-              bookedAt: new Date().toISOString()
-            } 
-          : s
-      );
-      await updateDoc(doc(db, 'trips', trip.id), { seats: updatedSeats });
+      const updatedSeats = trip.seats.map(s => {
+        if (s.seatNumber === selectedSeat) {
+          return { 
+            ...s, 
+            status: 'pending' as const, 
+            userId: auth.currentUser?.uid || 'guest', 
+            userName: fullName, 
+            userPhone: phoneNumber,
+            bookedAt: new Date().toISOString()
+          };
+        }
+        return s;
+      });
+
+      // Ensure no undefined values are sent to Firestore
+      const sanitizedSeats = JSON.parse(JSON.stringify(updatedSeats));
+      
+      const tripRef = doc(db, 'trips', trip.id);
+      await updateDoc(tripRef, { seats: sanitizedSeats });
       
       // 2. Move to instruction step
       setStep(3);
       toast.success('Seat reserved! Please follow payment instructions.');
     } catch (error) {
       console.error('Booking Error:', error);
-      toast.error('Failed to reserve seat');
+      try {
+        handleFirestoreError(error, OperationType.UPDATE, `trips/${trip.id}`);
+      } catch (e) {
+        // Error already logged by handleFirestoreError
+      }
+      toast.error('Failed to reserve seat. Please try again.');
     } finally {
       setLoading(false);
     }
